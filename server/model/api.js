@@ -6,8 +6,7 @@ const ApiSchema = mongoose.Schema({
     unique: false
   },
   desc: String,
-  prodUrl: String,
-  devUrl: String,
+  url: String,
   options: {
     method: String,
     // proxy: {

@@ -9,8 +9,7 @@ async function getApiList (ctx, next) {
     rs = await Api.createApi({
       name: '接口测试',
       desc: '接口描述',
-      prodUrl: 'prodUrl',
-      devUrl: 'devUrl',
+      url: '/mock/123/match',
       options: {
         method: 'POST',
         params: {},

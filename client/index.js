@@ -12,7 +12,7 @@ new Vue({
     }
   },
   mounted() {
-    axios.get('/mock/list')
+    axios.get('/api/list')
       .then(res => {
         const data = res.data.data
         console.log(res);
