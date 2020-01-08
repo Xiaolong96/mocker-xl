@@ -1,12 +1,15 @@
-const Api = require('../service/api');
+import path from 'path';
+import { loadFileList } from '../util/loadFileList';
+import { IApi } from '../types/index';
+
+const service = loadFileList(path.join(__dirname, '../service'), 'service', null);
 
 // 获取指定ID的API详情
-async function getApiList (ctx, next) {
-
+async function getApiList(ctx: any) {
   // 创建
-  let rs;
+  let rs: IApi;
   try {
-    rs = await Api.createApi({
+    rs = await service.api.createApi({
       name: '接口测试',
       desc: '接口描述',
       url: '/mock/123/match',
@@ -17,14 +20,14 @@ async function getApiList (ctx, next) {
           msg: '创建成功'
         },
         delay: 0
-      },
+      }
     });
-    if(rs) {
-      ctx.respond.success('接口创建成功', {data: rs})
+    if (rs) {
+      ctx.respond.success('接口创建成功', { data: rs });
     }
   } catch (error) {
     console.log(error);
-    ctx.respond.error('查询api详细信息出错', {error})
+    ctx.respond.error(`查询api详细信息出错: ${error}`);
   }
 
   // try {
@@ -46,4 +49,4 @@ async function getApiList (ctx, next) {
 
 module.exports = {
   getApiList
-}
+};

@@ -1,5 +1,6 @@
-const mongoose  = require('mongoose');
-const ApiSchema = mongoose.Schema({
+import mongoose from 'mongoose';
+import { IApi } from '../types';
+const ApiSchema = new mongoose.Schema({
   // 接口主要内容
   name: {
     type: String,
@@ -42,8 +43,7 @@ const ApiSchema = mongoose.Schema({
   modifiedTime: {
     type: String,
     default: Date.now
-  },
-})
+  }
+});
 
-module.exports = mongoose.model('Api', ApiSchema);
-
+export const ApiModel = mongoose.model<IApi>('Api', ApiSchema);
