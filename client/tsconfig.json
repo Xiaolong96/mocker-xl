@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "outDir": "./build/",
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["/*"],
+      "typings/*": ["typings/*"],
+      "utils/*": ["utils/*"],
+      "components/*": ["components/*"],
+      "application/*": ["application/*"],
+      "static/*": ["static~!@`/*"]
+    },
+    "typeRoots": ["node_modules/@types", "./src/typings"],
+    "target": "esnext",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": false,
+    "noEmit": true,
+    "jsx": "react"
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "config",
+    "lib",
+    "public",
+    "scripts",
+    "vm",
+    "wikidata"
+  ]
+}
