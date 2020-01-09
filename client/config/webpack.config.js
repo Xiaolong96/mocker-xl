@@ -1,5 +1,3 @@
-'use strict';
-
 const fs = require('fs');
 const isWsl = require('is-wsl');
 const path = require('path');
@@ -19,16 +17,16 @@ const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
-const paths = require('./paths');
-const modules = require('./modules');
-const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 
 const postcssNormalize = require('postcss-normalize');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+// const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const getClientEnvironment = require('./env');
+const modules = require('./modules');
+const paths = require('./paths');
 
 // 引入主题文件
 const theme = require('./theme');
@@ -47,7 +45,7 @@ const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
 
-//添加 支持less
+// 添加 支持less
 const lessRegex = /\.less$/;
 const lessModuleRegex = /\.module\.less$/;
 // This is the production and development configuration.
@@ -335,6 +333,7 @@ module.exports = function(webpackEnv) {
         components: path.resolve(__dirname, '../src/components'),
         views: path.resolve(__dirname, '../src/views'),
         static: path.resolve(__dirname, '../src/static'),
+        styles: path.resolve(__dirname, '../src/styles'),
       },
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding
@@ -497,7 +496,7 @@ module.exports = function(webpackEnv) {
               }),
             },
 
-            //处理less
+            // 处理less
 
             {
               test: lessRegex,
@@ -588,31 +587,26 @@ module.exports = function(webpackEnv) {
     },
     plugins: [
       // Generates an `index.html` file with the <script> injected.
-      new HtmlWebpackPlugin(
-        Object.assign(
-          {},
-          {
-            inject: true,
-            template: paths.appHtml,
-          },
-          isEnvProduction
-            ? {
-                minify: {
-                  removeComments: true,
-                  collapseWhitespace: true,
-                  removeRedundantAttributes: true,
-                  useShortDoctype: true,
-                  removeEmptyAttributes: true,
-                  removeStyleLinkTypeAttributes: true,
-                  keepClosingSlash: true,
-                  minifyJS: true,
-                  minifyCSS: true,
-                  minifyURLs: true,
-                },
-              }
-            : undefined
-        )
-      ),
+      new HtmlWebpackPlugin({
+        inject: true,
+        template: paths.appHtml,
+        ...(isEnvProduction
+          ? {
+              minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true,
+              },
+            }
+          : undefined),
+      }),
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
       isEnvProduction &&
@@ -658,7 +652,7 @@ module.exports = function(webpackEnv) {
       // having to parse `index.html`.
       new ManifestPlugin({
         fileName: 'asset-manifest.json',
-        publicPath: publicPath,
+        publicPath,
         generate: (seed, files) => {
           const manifestFiles = files.reduce(function(manifest, file) {
             manifest[file.name] = file.path;
@@ -683,7 +677,7 @@ module.exports = function(webpackEnv) {
           clientsClaim: true,
           exclude: [/\.map$/, /asset-manifest\.json$/],
           importWorkboxFrom: 'cdn',
-          navigateFallback: publicUrl + '/index.html',
+          navigateFallback: `${publicUrl}/index.html`,
           navigateFallbackBlacklist: [
             // Exclude URLs starting with /_, as they're likely an API call
             new RegExp('^/_'),

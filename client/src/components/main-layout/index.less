@@ -1,0 +1,26 @@
+@import '../../styles/variables.less';
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  .header {
+    width: 100%;
+    padding: 0;
+    background: @white;
+    .logo {
+      float: left;
+      width: 120px;
+      height: 31px;
+      line-height: 31px;
+      margin: 16px 24px;
+      font-size: @biggestFontSize;
+      font-family: 'Gill Sans', sans-serif;
+      text-align: center;
+      cursor: pointer;
+      color: rgba(0, 0, 0, 0.65);
+    }
+  }
+  .content {
+    flex: 1;
+  }
+}

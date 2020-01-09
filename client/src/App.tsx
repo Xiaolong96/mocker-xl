@@ -1,21 +1,28 @@
 import React from 'react';
+import { HashRouter as Router, Switch, Route } from 'react-router-dom';
+import MainLayout from 'components/main-layout';
+import NoMatch from 'views/no-match';
+import { RouteConfig } from 'react-router-config';
+import routes from './router';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <MainLayout>
+          <Switch>
+            {routes.map((route: RouteConfig, i: number) => (
+              <Route
+                key={route.key || i}
+                path={route.path}
+                exact={route.exact}
+                component={route.component}
+              />
+            ))}
+            <Route component={NoMatch} />
+          </Switch>
+        </MainLayout>
+      </Router>
     </div>
   );
 }

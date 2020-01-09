@@ -23,7 +23,10 @@ app.use(async function(ctx: any) {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'PUT, POST, GET, DELETE, OPTIONS'
   });
-  await send(ctx, ctx.path, { root: path.join(__dirname, '../client/'), index: 'index.html' });
+  await send(ctx, ctx.path, {
+    root: path.join(__dirname, '../client/build/'),
+    index: 'index.html'
+  });
 });
 
 // 连接数据库
