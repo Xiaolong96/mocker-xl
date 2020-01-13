@@ -14,12 +14,30 @@ const ProjectList = (props: RouteComponentProps) => {
   );
 };
 
+// 项目创建页
+const ProjectCreateCom = lazy(() =>
+  import('views/project/project-create/ProjectCreate')
+);
+const ProjectCreate = (props: RouteComponentProps) => {
+  return (
+    <Suspense fallback={null}>
+      <ProjectCreateCom {...props} />
+    </Suspense>
+  );
+};
+
 const routes: RouteConfig[] = [
   {
     path: '/',
     exact: true,
     key: 'ProjectList',
     component: ProjectList,
+  },
+  {
+    path: '/project/create',
+    exact: true,
+    key: 'ProjectCreate',
+    component: ProjectCreate,
   },
 ];
 

@@ -5,6 +5,12 @@ function createApi(api: IApi) {
   return ApiModel.create(api);
 }
 
+function getAllApi(url: string) {
+  const reg = new RegExp(`.*${url}.*`, 'i');
+  const condition = { url: reg };
+  return ApiModel.findOne(condition).sort({ modifiedTime: -1 });
+}
+
 function getApiByUrl(url: string) {
   const reg = new RegExp(`.*${url}.*`, 'i');
   const condition = { url: reg };

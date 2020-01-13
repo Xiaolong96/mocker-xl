@@ -1,12 +1,67 @@
-import React from 'react';
-import Spots from 'components/spots';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { Icon } from 'antd';
+import Spots from 'components/spots';
+import { getProjectList } from 'services/project';
+import { Project } from 'typings/project';
 import './index.less';
 
 function ProjectList(props: any) {
+  const headRef = useRef<HTMLDivElement>(null);
+
+  const [projectList, setProjectList] = useState<Project[]>([]);
+
+  const getAllProject = async () => {
+    try {
+      const rs = await getProjectList();
+      if (rs) {
+        setProjectList(rs);
+      }
+    } catch (error) {
+      console.log(error);
+      setProjectList([]);
+    }
+  };
+
+  function handleScroll() {
+    const head = headRef.current as HTMLDivElement;
+    const app = document.getElementsByClassName('App')[0] as HTMLElement;
+    if (app.scrollTop >= 76) {
+      head.style.paddingTop = '16px';
+      head.style.paddingBottom = '16px';
+    }
+    if (app.scrollTop < 48) {
+      head.style.paddingTop = '30px';
+      head.style.paddingBottom = '30px';
+    }
+  }
+
+  useEffect(() => {
+    getAllProject();
+    (document.getElementsByClassName('App')[0] as HTMLElement).addEventListener(
+      'scroll',
+      handleScroll
+    );
+    return () => {
+      (document.getElementsByClassName(
+        'App'
+      )[0] as HTMLElement).removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   console.log(myRef.current);
+  //   if (myRef.current) {
+  //     setTimeout(() => {
+  //       myRef.current &&
+  //         ((myRef.current as HTMLDivElement).style.paddingTop = '0px');
+  //     }, 1000);
+  //   }
+  // }, [myRef]);
+
   return (
     <div className="project-list">
-      <div className="project-list-header">
+      <div ref={headRef} className="project-list-header">
         <Spots />
         <div className="header-info">
           <h2>我的项目</h2>
@@ -14,11 +69,25 @@ function ProjectList(props: any) {
         </div>
       </div>
       <div className="project-list-item-wrap">
-        <div className="project-list-item" />
+        {projectList.map(item => (
+          <div key={item.name} className="project-list-item">
+            <h2>{item.name}</h2>
+            <span className="project-tit">项目描述</span>
+            <p className="project-desc">{item.desc}</p>
+            <span className="project-tit">项目路径</span>
+            <p className="project-url">{item.baseUrl}</p>
+            <span className="project-tit">代理路径</span>
+            <p className="project-proxy-url">
+              {item.proxy.proxyUrl || '您还没有设置哦～'}
+            </p>
+          </div>
+        ))}
       </div>
-      <div className="add">
-        <Icon type="plus" />
-      </div>
+      <Link to="/project/create">
+        <div className="add">
+          <Icon type="plus" />
+        </div>
+      </Link>
     </div>
   );
 }

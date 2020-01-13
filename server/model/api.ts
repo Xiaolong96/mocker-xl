@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { IApi } from '../types';
+const { ObjectId } = mongoose.Schema.Types;
 const ApiSchema = new mongoose.Schema({
   // 接口主要内容
   name: {
@@ -35,6 +36,10 @@ const ApiSchema = new mongoose.Schema({
     //   default: 0
     // },
     delay: Number
+  },
+  projectId: {
+    type: ObjectId,
+    ref: 'project'
   },
   createTime: {
     type: String,

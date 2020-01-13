@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "//mocker.xl.com",
+  "proxy": "http://localhost:1988",
   "dependencies": {
     "@types/echarts": "^4.4.1",
     "@types/jest": "24.0.15",

@@ -4,7 +4,34 @@ import { IApi } from '../types/index';
 
 const service = loadFileList(path.join(__dirname, '../service'), 'service', null);
 
-// 获取指定ID的API详情
+// 创建 mock API
+async function createApi(ctx: any) {
+  // 创建
+  let rs: IApi;
+  try {
+    rs = await service.api.createApi({
+      name: '接口测试',
+      desc: '接口描述',
+      url: '/mock/123/match',
+      options: {
+        method: 'POST',
+        params: {},
+        response: {
+          msg: '创建成功'
+        },
+        delay: 0
+      }
+    });
+    if (rs) {
+      ctx.respond.success('接口创建成功', { data: rs });
+    }
+  } catch (error) {
+    console.log(error);
+    ctx.respond.error(`接口创建失败: ${error}`);
+  }
+}
+
+// 创建 mock API
 async function getApiList(ctx: any) {
   // 创建
   let rs: IApi;
@@ -48,5 +75,6 @@ async function getApiList(ctx: any) {
 }
 
 module.exports = {
+  createApi,
   getApiList
 };

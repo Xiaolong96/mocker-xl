@@ -18,12 +18,15 @@ const controller = loadFileList(path.join(__dirname, '../controller'), 'controll
 console.log(controller);
 // api
 const { getApiList } = controller.api;
+router.get('/api/list', getApiList);
+
+// project
+const { createProject, getProjectList } = controller.project;
+router.post('/project/create', createProject);
+router.get('/project/list', getProjectList);
 
 // mock
 const { mock } = controller.mock;
-
-router.get('/api/list', getApiList);
-
 // mock 请求
 const mockUrl = pathToRegexp('/mock/:id/:url*', []);
 allMethods.forEach((method) => {
