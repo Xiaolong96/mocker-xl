@@ -4,15 +4,13 @@ import React from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import Spots from 'components/spots';
-import { Project } from 'typings/project';
-import { projectCreate } from '../../../services/project';
 import './index.less';
 
 interface FormProps extends FormComponentProps {
   [propName: string]: any; // 要传进来的属性
 }
 
-function ProjectCreate(props: any) {
+function ApiCreate(props: any) {
   const formItemLayout = {
     // labelCol: {
     //   xs: { span: 2 },
@@ -30,24 +28,24 @@ function ProjectCreate(props: any) {
     props.form.validateFields(async (err: any, fieldsValue: any) => {
       if (!err) {
         console.log(fieldsValue);
-        const { baseUrl, desc, name, proxyUrl } = fieldsValue;
-        const param: Partial<Project> = {
-          baseUrl: `/${baseUrl}`,
-          desc: desc || name,
-          name,
-          proxy: {
-            proxyUrl: proxyUrl ? `http://${proxyUrl}` : '',
-          },
-        };
-        try {
-          const rs = await projectCreate(param);
-          if (rs) {
-            message.success('项目创建成功');
-            props.history.push('/');
-          }
-        } catch (error) {
-          console.log(error);
-        }
+        // const { baseUrl, desc, name, proxyUrl } = fieldsValue;
+        // const param: Partial<api> = {
+        //   baseUrl: `/${baseUrl}`,
+        //   desc: desc || name,
+        //   name,
+        //   proxy: {
+        //     proxyUrl: proxyUrl ? `http://${proxyUrl}` : '',
+        //   },
+        // };
+        // try {
+        //   const rs = await apiCreate(param);
+        //   if (rs) {
+        //     message.success('项目创建成功');
+        //     props.history.push('/');
+        //   }
+        // } catch (error) {
+        //   console.log(error);
+        // }
       }
     });
   };
@@ -55,20 +53,20 @@ function ProjectCreate(props: any) {
   const { getFieldDecorator } = props.form;
 
   return (
-    <div className="project-create">
-      <div className="project-create-header">
+    <div className="api-create">
+      <div className="api-create-header">
         <Spots />
         <div className="header-info">
-          <h2>创建项目</h2>
-          <p>快来创建一个令人愉快的项目吧～</p>
+          <h2>创建接口</h2>
+          <p>快来创建一个令人愉快的接口吧～</p>
         </div>
       </div>
-      <div className="project-create-content">
+      <div className="api-create-content">
         <Form
           layout="vertical"
           onSubmit={handleSubmit}
           {...formItemLayout}
-          className="project-create-form"
+          className="api-create-form"
         >
           <Form.Item label="项目名称">
             {getFieldDecorator('name', {
@@ -78,7 +76,7 @@ function ProjectCreate(props: any) {
                   message: '名称不能为空',
                 },
               ],
-            })(<Input maxLength={30} placeholder="project" />)}
+            })(<Input maxLength={30} placeholder="api" />)}
           </Form.Item>
           <Form.Item label="项目基础URL">
             {getFieldDecorator('baseUrl', {
@@ -115,4 +113,4 @@ function ProjectCreate(props: any) {
   );
 }
 
-export default Form.create<FormProps>({})(ProjectCreate);
+export default Form.create<FormProps>({})(ApiCreate);

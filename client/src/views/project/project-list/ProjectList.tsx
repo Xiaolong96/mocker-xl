@@ -1,3 +1,5 @@
+/* eslint-disable import/extensions */
+/* eslint-disable import/no-unresolved */
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from 'antd';
@@ -21,6 +23,10 @@ function ProjectList(props: any) {
       console.log(error);
       setProjectList([]);
     }
+  };
+
+  const goDetail = (id: string) => {
+    props.history.push(`/project/${id}`);
   };
 
   function handleScroll() {
@@ -69,8 +75,14 @@ function ProjectList(props: any) {
         </div>
       </div>
       <div className="project-list-item-wrap">
-        {projectList.map(item => (
-          <div key={item.name} className="project-list-item">
+        {projectList.map((item: Project) => (
+          <div
+            key={item.name}
+            className="project-list-item"
+            onClick={() => {
+              goDetail(item.projectId);
+            }}
+          >
             <h2>{item.name}</h2>
             <span className="project-tit">项目描述</span>
             <p className="project-desc">{item.desc}</p>

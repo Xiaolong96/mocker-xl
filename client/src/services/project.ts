@@ -8,7 +8,7 @@ interface RequestResponse {
   data: any;
 }
 // 项目创建
-export const projectCreate = async (params: Project) => {
+export const projectCreate = async (params: Partial<Project>) => {
   const res = await request<Response<RequestResponse>>({
     url: '/project/create',
     method: 'POST',
@@ -22,6 +22,16 @@ export const getProjectList = async () => {
   const res = await request<Response<RequestResponse>>({
     url: '/project/list',
     method: 'GET',
+  });
+  return res && res.data;
+};
+
+// 查询项目
+export const queryProject = async (params: { projectId: string }) => {
+  const res = await request<Response<RequestResponse>>({
+    url: '/project/query',
+    method: 'GET',
+    data: params,
   });
   return res && res.data;
 };

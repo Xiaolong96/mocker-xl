@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import React, { lazy, Suspense } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { RouteConfig } from 'react-router-config';
@@ -26,6 +27,18 @@ const ProjectCreate = (props: RouteComponentProps) => {
   );
 };
 
+// 项目创建页
+const ProjectDetailCom = lazy(() =>
+  import('views/project/project-detail/ProjectDetail')
+);
+const ProjectDetail = (props: RouteComponentProps) => {
+  return (
+    <Suspense fallback={null}>
+      <ProjectDetailCom {...props} />
+    </Suspense>
+  );
+};
+
 const routes: RouteConfig[] = [
   {
     path: '/',
@@ -38,6 +51,12 @@ const routes: RouteConfig[] = [
     exact: true,
     key: 'ProjectCreate',
     component: ProjectCreate,
+  },
+  {
+    path: '/project/:id',
+    exact: true,
+    key: 'ProjectDetail',
+    component: ProjectDetail,
   },
 ];
 

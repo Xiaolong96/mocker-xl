@@ -17,6 +17,7 @@ export interface IApi extends mongoose.Document {
 
 // project 接口
 export interface IProject extends mongoose.Document {
+  projectId: string;
   name: string;
   desc: string;
   baseUrl: string;

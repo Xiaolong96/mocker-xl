@@ -1,6 +1,11 @@
 import mongoose from 'mongoose';
 import { IProject } from '../types';
+const { ObjectId } = mongoose.Schema.Types;
 const ProjectSchema = new mongoose.Schema({
+  projectId: {
+    type: ObjectId,
+    default: new mongoose.Types.ObjectId()
+  },
   name: {
     type: String,
     unique: false

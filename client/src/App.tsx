@@ -1,3 +1,5 @@
+/* eslint-disable import/extensions */
+/* eslint-disable import/no-unresolved */
 import React from 'react';
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import MainLayout from 'components/main-layout';
