@@ -26,6 +26,7 @@
     "echarts": "^4.5.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
+    "monaco-editor": "^0.19.3",
     "react": "^16.8.6",
     "react-app-polyfill": "^1.0.1",
     "react-dev-utils": "^9.0.1",

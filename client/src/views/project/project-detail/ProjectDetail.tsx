@@ -130,9 +130,11 @@ function ProjectDetail(props: any) {
             {project.proxy.proxyUrl || '您还没有设置哦～'}
           </p>
           <div className="opera">
-            <Button type="primary" icon="plus">
-              创建接口
-            </Button>
+            <Link to="/api/create">
+              <Button type="primary" icon="plus">
+                创建接口
+              </Button>
+            </Link>
           </div>
         </div>
 

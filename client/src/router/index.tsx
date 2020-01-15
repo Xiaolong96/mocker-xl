@@ -39,6 +39,16 @@ const ProjectDetail = (props: RouteComponentProps) => {
   );
 };
 
+// 接口创建页
+const ApiCreateCom = lazy(() => import('views/api/api-create/ApiCreate'));
+const ApiCreate = (props: RouteComponentProps) => {
+  return (
+    <Suspense fallback={null}>
+      <ApiCreateCom {...props} />
+    </Suspense>
+  );
+};
+
 const routes: RouteConfig[] = [
   {
     path: '/',
@@ -57,6 +67,12 @@ const routes: RouteConfig[] = [
     exact: true,
     key: 'ProjectDetail',
     component: ProjectDetail,
+  },
+  {
+    path: '/api/create',
+    exact: true,
+    key: 'ApiCreate',
+    component: ApiCreate,
   },
 ];
 

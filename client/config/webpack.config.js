@@ -1,3 +1,4 @@
+/* eslint-disable */
 const fs = require('fs');
 const isWsl = require('is-wsl');
 const path = require('path');
@@ -23,7 +24,7 @@ const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 
 const postcssNormalize = require('postcss-normalize');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-// const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const getClientEnvironment = require('./env');
 const modules = require('./modules');
 const paths = require('./paths');
@@ -714,7 +715,10 @@ module.exports = function(webpackEnv) {
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
         }),
-      // new MonacoWebpackPlugin(),
+      new MonacoWebpackPlugin({
+        // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
+        languages: ['json'],
+      }),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell Webpack to provide empty mocks for them so importing them works.
