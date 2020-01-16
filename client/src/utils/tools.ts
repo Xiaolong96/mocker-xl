@@ -7,3 +7,8 @@ export function triggerEvent(el: Element | Window, type: string) {
     el.dispatchEvent(e);
   }
 }
+
+export function stripComment(source: string): string {
+  const reg = /((?<!:)\/\/.*)|(\/\*[\s\S]*?\*\/)/g;
+  return source == null ? '' : source.replace(reg, '');
+}

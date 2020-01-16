@@ -10,6 +10,8 @@ import MonacoEditor, {
 import { FormComponentProps } from 'antd/lib/form';
 import Spots from 'components/spots';
 import './index.less';
+import { stripComment } from 'utils/tools';
+import { editor } from 'monaco-editor';
 
 const { Option } = Select;
 
@@ -31,24 +33,29 @@ function ApiCreate(props: any) {
     // colon: false,
   };
 
+  // 保存编辑器实例
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
+
   const options = {
     selectOnLineNumbers: true,
   };
 
-  const [code, setCode] = useState('// type your code...');
+  const [code, setCode] = useState('// type your mock data...');
 
-  const editorDidMount: EditorDidMount = (editor, monaco) => {
-    console.log('editorDidMount', editor);
+  const editorDidMount: EditorDidMount = (e, monaco) => {
+    console.log('editorDidMount', e);
     console.log('monaco', monaco);
-    editor.focus();
-    editor.layout();
+    e.focus();
+    e.layout();
+    editorRef.current = e;
     setTimeout(() => {
-      editor.layout();
-      const model = editor.getModel();
-      if (model) {
-        console.log(model.getValue(), 'model.getValue()');
-        // console.log(JSON.parse(model.getValue()));
-      }
+      e.layout();
+      editorRef.current = e;
+      // const model = editor.getModel();
+      // if (model) {
+      //   console.log(model.getValue(), 'model.getValue()');
+      //   // console.log(JSON.parse(model.getValue()));
+      // }
     }, 100);
   };
   const editorWillMount: EditorWillMount = monaco => {
@@ -56,7 +63,22 @@ function ApiCreate(props: any) {
   };
   const onChange: ChangeHandler = (newValue, e) => {
     console.log('onChange', newValue, e);
+    // console.log(stripComment(newValue));
     setCode(newValue);
+  };
+
+  const trigger = (e: editor.IStandaloneCodeEditor, id: string) => {
+    console.log(e, 'meditor');
+    if (!e) return;
+    console.log('onFormataaa');
+    e.trigger('anyString', id, null);
+  };
+
+  // 格式化代码
+  const onFormat = () => {
+    if (editorRef.current) {
+      trigger(editorRef.current, 'editor.action.formatDocument');
+    }
   };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
@@ -64,7 +86,29 @@ function ApiCreate(props: any) {
     props.form.validateFields(async (err: any, fieldsValue: any) => {
       if (!err) {
         console.log(fieldsValue);
-        console.log(code, 'code');
+        const { name, method, desc, url, delay } = fieldsValue;
+        let response;
+        try {
+          response = JSON.parse(stripComment(code) || '{}');
+          console.log(JSON.parse(stripComment(code) || '{}'), 'code');
+        } catch (error) {
+          console.log(error);
+          message.error('mock 数据有错误，请检查修改后再次创建');
+          return;
+        }
+        const param = {
+          name,
+          desc: desc || '',
+          url,
+          options: {
+            method,
+            params: {},
+            response,
+            delay,
+          },
+          projectId: 'string',
+        };
+        console.log(param, 'param');
         // const model = monacoRef.editor.getModel();
         // console.log(model, 'model');
         // const { baseUrl, desc, name, proxyUrl } = fieldsValue;
@@ -143,17 +187,52 @@ function ApiCreate(props: any) {
               ],
             })(<Input addonBefore="/" maxLength={30} placeholder="" />)}
           </Form.Item>
+          <Form.Item label="接口返回延时">
+            {getFieldDecorator('delay', {
+              rules: [
+                {
+                  required: true,
+                  message: '延时不能为空',
+                },
+                {
+                  pattern: /^(0|[1-9][0-9]*)$/,
+                  message: '延时为正整数',
+                },
+              ],
+              initialValue: 0,
+            })(
+              <Input
+                addonAfter="ms"
+                type="number"
+                maxLength={8}
+                placeholder=""
+              />
+            )}
+          </Form.Item>
           <Form.Item label="接口描述">
             {getFieldDecorator('desc')(
               <Input maxLength={255} placeholder="" />
             )}
           </Form.Item>
           <Form.Item className="ta-c">
-            <Button type="primary" htmlType="submit">
+            <Button style={{ width: '100%' }} type="primary" htmlType="submit">
               创建
             </Button>
           </Form.Item>
         </Form>
+        <div className="side-btn">
+          <Button type="primary" onClick={onFormat}>
+            格式化
+          </Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              props.history.goBack();
+            }}
+          >
+            关闭
+          </Button>
+        </div>
       </div>
       <div className="api-create-main">
         <MonacoEditor
@@ -161,7 +240,7 @@ function ApiCreate(props: any) {
           height="100%"
           language="json"
           theme="vs"
-          value={code}
+          defaultValue={code}
           options={options}
           onChange={onChange}
           editorWillMount={editorWillMount}
