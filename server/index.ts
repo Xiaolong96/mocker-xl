@@ -6,12 +6,11 @@ const router = require('./router');
 // 对于POST请求的处理，koa-bodyparser中间件可以把koa2上下文的formData数据解析到ctx.request.body中
 const bodyParser = require('koa-bodyparser');
 const respond = require('./middleware/respond');
-const { url } = require('./config/core').mongoose;
+const config = require('./config/core');
 
 const app = new Koa();
 app.use(bodyParser());
 const startTime = new Date().valueOf();
-const appPORT = 1988;
 
 app.use(respond());
 // 调用路由
@@ -31,7 +30,11 @@ app.use(async function(ctx: any) {
 
 // 连接数据库
 mongoose
-  .connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+  .connect(config.mongoose.url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true
+  })
   .then(
     () => {
       console.log('数据库连接成功');
@@ -41,10 +44,10 @@ mongoose
     }
   );
 
-app.listen(appPORT, function() {
+app.listen(config.port, function() {
   console.log(
     '后台管理界面运行于: http://localhost:%s',
-    appPORT,
+    config.port,
     '耗时:',
     new Date().valueOf() - startTime,
     'ms'

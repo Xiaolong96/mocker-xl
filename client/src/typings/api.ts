@@ -1,5 +1,5 @@
 // project 接口
-export interface API {
+export interface Api {
   name: string;
   desc: string;
   url: string;
@@ -9,7 +9,7 @@ export interface API {
     response: any;
     delay: number;
   };
-  projectId: string;
+  project: string;
   createTime: number;
   modifiedTime: number;
 }

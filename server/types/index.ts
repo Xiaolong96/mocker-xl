@@ -10,7 +10,7 @@ export interface IApi extends mongoose.Document {
     response: any;
     delay: number;
   };
-  projectId: string;
+  project: string;
   createTime: number;
   modifiedTime: number;
 }
@@ -22,6 +22,7 @@ export interface IProject extends mongoose.Document {
   desc: string;
   baseUrl: string;
   proxy: any;
+  apis: string[];
   createTime: number;
   modifiedTime: number;
 }

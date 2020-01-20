@@ -2,14 +2,34 @@
 /* eslint-disable import/no-unresolved */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Icon, Button, Tag, Table } from 'antd';
+import { Icon, Button, Tag, Table, message } from 'antd';
 import Spots from 'components/spots';
 import { getProjectList, queryProject } from 'services/project';
 import { Project } from 'typings/project';
 import './index.less';
+import { ColumnProps } from 'antd/lib/table';
+import { Api } from 'typings/api';
+import config from '../../../config/index';
+
+interface TableApi {
+  name: string;
+  method: string;
+  url: string;
+  delay: number;
+  desc: string;
+  key: number;
+}
 
 function ProjectDetail(props: any) {
   const headRef = useRef<HTMLDivElement>(null);
+
+  const methodColor = {
+    get: '#87d068',
+    post: '#2db7f5',
+    put: '#108ee9',
+    delete: '#f50',
+    patch: '#722ed1',
+  };
 
   const initProject: Project = {
     projectId: '',
@@ -19,6 +39,7 @@ function ProjectDetail(props: any) {
     baseUrl: '',
     desc: '',
     name: '',
+    apis: [],
     createTime: '',
     modifiedTime: '',
   };
@@ -27,7 +48,7 @@ function ProjectDetail(props: any) {
   const query = useCallback(async () => {
     try {
       const param = {
-        projectId: props.history.location.pathname.split('/')[2],
+        projectId: props.match.params.id,
       };
       const rs = await queryProject(param);
       if (rs) {
@@ -51,46 +72,104 @@ function ProjectDetail(props: any) {
     }
   }
 
+  const copyUrl = (record: TableApi) => {
+    console.log(record);
+    const path = `${config.host}:${config.port}/mock/${project.projectId +
+      project.baseUrl +
+      record.url}`;
+    const input = document.createElement('input');
+    input.setAttribute('readonly', 'readonly');
+    input.setAttribute('value', path);
+    document.body.appendChild(input);
+    input.select();
+    // input.setSelectionRange(0, 9999); // 在ios下使用
+    if (document.execCommand('copy')) {
+      document.execCommand('copy');
+      message.success(`${path} copied! 🎉`);
+    }
+    document.body.removeChild(input);
+  };
+
   // 表格
 
-  const columns = [
-    { title: 'Name', dataIndex: 'name', key: 'name' },
-    { title: 'Age', dataIndex: 'age', key: 'age' },
-    { title: 'Address', dataIndex: 'address', key: 'address' },
+  const columns: ColumnProps<TableApi>[] = [
     {
-      title: 'Action',
-      dataIndex: '',
-      key: 'x',
-      render: () => <a>Delete</a>,
+      title: '接口名称',
+      dataIndex: 'name',
+      key: 'name',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '方法',
+      dataIndex: 'method',
+      key: 'method',
+      align: 'center',
+      ellipsis: true,
+      render: (text: string) => (
+        <Tag color={methodColor[text as keyof typeof methodColor]}>{text}</Tag>
+      ),
+    },
+    {
+      title: 'URL',
+      dataIndex: 'url',
+      key: 'url',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '延时',
+      dataIndex: 'delay',
+      key: 'delay',
+      align: 'center',
+      ellipsis: true,
+      render: (text: number) => <span>{`${text} ms`}</span>,
+    },
+    {
+      title: '描述',
+      dataIndex: 'desc',
+      key: 'desc',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '操作',
+      dataIndex: 'operation',
+      key: 'operation',
+      align: 'center',
+      ellipsis: true,
+      render: (text, record) => (
+        <>
+          <Icon
+            title="复制接口地址"
+            className="opera-btn"
+            type="copy"
+            onClick={() => {
+              copyUrl(record);
+            }}
+          />
+          <Icon title="编辑" className="opera-btn" type="edit" />
+          <Icon title="删除" className="opera-btn" type="delete" />
+        </>
+      ),
     },
   ];
 
-  const data = [
-    {
-      key: 1,
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      description:
-        'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
-    },
-    {
-      key: 2,
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      description:
-        'My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park.',
-    },
-    {
-      key: 3,
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      description:
-        'My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.',
-    },
-  ];
+  const data: TableApi[] = project.apis.map((item: Api, idx: number) => {
+    return {
+      name: item.name,
+      method: item.options.method,
+      url: item.url,
+      delay: item.options.delay,
+      desc: item.desc || '- -',
+      key: idx,
+    };
+  });
+
+  // 跳转接口创建页
+  const goCreate = () => {
+    props.history.push(`/api/create?project=${props.match.params.id}`);
+  };
 
   useEffect(() => {
     query();
@@ -119,7 +198,7 @@ function ProjectDetail(props: any) {
           <Spots />
           <p className="tag">
             <span>Mock 地址</span>
-            {`http://localhost:1988/mock/${project.projectId}${project.baseUrl}`}
+            {`${config.host}:${config.port}/mock/${project.projectId}${project.baseUrl}`}
           </p>
           <p className="tag">
             <span>Project ID</span>
@@ -130,20 +209,18 @@ function ProjectDetail(props: any) {
             {project.proxy.proxyUrl || '您还没有设置哦～'}
           </p>
           <div className="opera">
-            <Link to="/api/create">
-              <Button type="primary" icon="plus">
-                创建接口
-              </Button>
-            </Link>
+            <Button type="primary" icon="plus" onClick={goCreate}>
+              创建接口
+            </Button>
           </div>
         </div>
 
         <div className="api-list">
-          <Table
+          <Table<TableApi>
             size="middle"
             columns={columns}
             expandedRowRender={record => (
-              <p style={{ margin: 0 }}>{record.description}</p>
+              <p style={{ margin: 0 }}>{record.desc}</p>
             )}
             dataSource={data}
           />

@@ -15,10 +15,16 @@ const ProjectSchema = new mongoose.Schema({
   proxy: {
     type: Object,
     default: {
-      target: 'htttp://www.xl.com',
+      target: 'http://www.xl.com',
       cookie: ''
     }
   },
+  apis: [
+    {
+      type: ObjectId,
+      ref: 'Api'
+    }
+  ],
   createTime: {
     type: String,
     default: Date.now

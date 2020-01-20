@@ -12,6 +12,7 @@ import Spots from 'components/spots';
 import './index.less';
 import { stripComment } from 'utils/tools';
 import { editor } from 'monaco-editor';
+import { apiCreate } from 'services/api';
 
 const { Option } = Select;
 
@@ -99,36 +100,25 @@ function ApiCreate(props: any) {
         const param = {
           name,
           desc: desc || '',
-          url,
+          url: `/${url}`,
           options: {
             method,
             params: {},
             response,
             delay,
           },
-          projectId: 'string',
+          project: props.location.search.split('=')[1],
         };
         console.log(param, 'param');
-        // const model = monacoRef.editor.getModel();
-        // console.log(model, 'model');
-        // const { baseUrl, desc, name, proxyUrl } = fieldsValue;
-        // const param: Partial<api> = {
-        //   baseUrl: `/${baseUrl}`,
-        //   desc: desc || name,
-        //   name,
-        //   proxy: {
-        //     proxyUrl: proxyUrl ? `http://${proxyUrl}` : '',
-        //   },
-        // };
-        // try {
-        //   const rs = await apiCreate(param);
-        //   if (rs) {
-        //     message.success('项目创建成功');
-        //     props.history.push('/');
-        //   }
-        // } catch (error) {
-        //   console.log(error);
-        // }
+        try {
+          const rs = await apiCreate(param);
+          if (rs) {
+            message.success('接口创建成功');
+            props.history.goBack();
+          }
+        } catch (error) {
+          console.log(error);
+        }
       }
     });
   };
@@ -156,8 +146,13 @@ function ApiCreate(props: any) {
                   required: true,
                   message: '名称不能为空',
                 },
+                {
+                  pattern: /^[\u4e00-\u9fa5a-zA-Z0-9\-_.]{0,30}$/,
+                  message:
+                    '仅支持汉字、英文字母、数字、下划线(_)、连字符(-)、点(.)',
+                },
               ],
-            })(<Input maxLength={30} placeholder="api" />)}
+            })(<Input maxLength={30} placeholder="" />)}
           </Form.Item>
           <Form.Item label="方法">
             {getFieldDecorator('method', {
@@ -183,6 +178,10 @@ function ApiCreate(props: any) {
                 {
                   required: true,
                   message: 'URL不能为空',
+                },
+                {
+                  pattern: /^[a-zA-Z]*$/,
+                  message: '格式为大小写英文字母',
                 },
               ],
             })(<Input addonBefore="/" maxLength={30} placeholder="" />)}

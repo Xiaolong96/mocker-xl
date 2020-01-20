@@ -77,6 +77,11 @@ function ProjectCreate(props: any) {
                   required: true,
                   message: '名称不能为空',
                 },
+                {
+                  pattern: /^[\u4e00-\u9fa5a-zA-Z0-9\-_.]{0,30}$/,
+                  message:
+                    '仅支持汉字、英文字母、数字、下划线(_)、连字符(-)、点(.)',
+                },
               ],
             })(<Input maxLength={30} placeholder="project" />)}
           </Form.Item>
@@ -87,14 +92,25 @@ function ProjectCreate(props: any) {
                   required: true,
                   message: '基础URL不能为空',
                 },
+                {
+                  pattern: /^[a-zA-Z]*$/,
+                  message: '格式为大小写英文字母',
+                },
               ],
             })(<Input addonBefore="/" maxLength={30} placeholder="example" />)}
           </Form.Item>
           <Form.Item label="项目代理URL">
-            {getFieldDecorator('proxyUrl')(
+            {getFieldDecorator('proxyUrl', {
+              rules: [
+                {
+                  pattern: /^((https?:\/\/)?(([a-zA-Z0-9]+-?)+[a-zA-Z0-9]+\.)+[a-zA-Z]+)(:\d+)?(\/.*)?(\?.*)?(#.*)?$/,
+                  message: '格式不正确',
+                },
+              ],
+            })(
               <Input
                 addonBefore="http://"
-                maxLength={30}
+                maxLength={255}
                 placeholder="www.a.com"
               />
             )}

@@ -1,3 +1,5 @@
+import { Api } from './api';
+
 // project 接口
 export interface Project {
   projectId: string;
@@ -5,6 +7,7 @@ export interface Project {
   desc: string;
   baseUrl: string;
   proxy: any;
+  apis: Api[];
   createTime: string;
   modifiedTime: string;
 }

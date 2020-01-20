@@ -2,8 +2,9 @@ import mongoose from 'mongoose';
 import { ProjectModel } from '../model/project';
 import { IProject } from '../types/index';
 
-function createProject(api: Partial<IProject>) {
-  return ProjectModel.create(api);
+function createProject(project: any) {
+  project.projectId = new mongoose.Types.ObjectId();
+  return ProjectModel.create(project);
 }
 
 function getAllProject() {
@@ -12,7 +13,9 @@ function getAllProject() {
 
 function findProject(id: string) {
   console.log('findProject', mongoose.Types.ObjectId(id));
-  return ProjectModel.findOne({ projectId: mongoose.Types.ObjectId(id) }, { _id: 0, __v: 0 });
+  return ProjectModel.findOne({ projectId: mongoose.Types.ObjectId(id) }, { _id: 0, __v: 0 })
+    .populate('apis')
+    .exec();
 }
 
 export { createProject, getAllProject, findProject };

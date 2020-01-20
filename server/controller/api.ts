@@ -7,23 +7,13 @@ const service = loadFileList(path.join(__dirname, '../service'), 'service', null
 // 创建 mock API
 async function createApi(ctx: any) {
   // 创建
+  const params = ctx.request.body;
+  console.log(params);
   let rs: IApi;
   try {
-    rs = await service.api.createApi({
-      name: '接口测试',
-      desc: '接口描述',
-      url: '/mock/123/match',
-      options: {
-        method: 'POST',
-        params: {},
-        response: {
-          msg: '创建成功'
-        },
-        delay: 0
-      }
-    });
+    rs = await service.api.createApi(params);
     if (rs) {
-      ctx.respond.success('接口创建成功', { data: rs });
+      ctx.respond.success('接口创建成功', rs);
     }
   } catch (error) {
     console.log(error);

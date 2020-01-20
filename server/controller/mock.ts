@@ -12,7 +12,8 @@ export async function mock(ctx: any) {
     console.log(api, 'api');
     if (!api) return;
     // 方法不匹配
-    if (api.options.method !== ctx.method) {
+    console.log(ctx.method);
+    if (api.options.method !== ctx.method.toLowerCase()) {
       ctx.status = 405;
       return;
     }

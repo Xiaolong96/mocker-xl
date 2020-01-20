@@ -17,8 +17,9 @@ const controller = loadFileList(path.join(__dirname, '../controller'), 'controll
 
 // console.log(controller);
 // api
-const { getApiList } = controller.api;
+const { getApiList, createApi } = controller.api;
 router.get('/api/list', getApiList);
+router.post('/api/create', createApi);
 
 // project
 const { createProject, getProjectList, queryProject } = controller.project;
@@ -29,7 +30,7 @@ router.get('/project/query', queryProject);
 // mock
 const { mock } = controller.mock;
 // mock 请求
-const mockUrl = pathToRegexp('/mock/:id/:url*', []);
+const mockUrl = pathToRegexp('/mock/:id/:projectUrl/:url*', []);
 allMethods.forEach((method) => {
   router[method](mockUrl, mock);
 });

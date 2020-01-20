@@ -37,9 +37,9 @@ const ApiSchema = new mongoose.Schema({
     // },
     delay: Number
   },
-  projectId: {
+  project: {
     type: ObjectId,
-    ref: 'project'
+    ref: 'Project'
   },
   createTime: {
     type: String,
