@@ -4,6 +4,12 @@ import { IProject } from '../types/index';
 
 function createProject(project: any) {
   project.projectId = new mongoose.Types.ObjectId();
+  project.proxy = {
+    target: '',
+    cookie: '',
+    status: 0, // 1 开， 0 关
+    ...project.proxy
+  };
   return ProjectModel.create(project);
 }
 
@@ -18,4 +24,16 @@ function findProject(id: string) {
     .exec();
 }
 
-export { createProject, getAllProject, findProject };
+async function updateProject(p: IProject) {
+  try {
+    const proj = await ProjectModel.findOne({ projectId: mongoose.Types.ObjectId(p.projectId) });
+    if (proj) {
+      proj.set({ ...proj, ...p });
+      return proj.save();
+    }
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
+
+export { createProject, getAllProject, findProject, updateProject };

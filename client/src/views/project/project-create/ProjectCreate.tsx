@@ -30,13 +30,13 @@ function ProjectCreate(props: any) {
     props.form.validateFields(async (err: any, fieldsValue: any) => {
       if (!err) {
         console.log(fieldsValue);
-        const { baseUrl, desc, name, proxyUrl } = fieldsValue;
+        const { baseUrl, desc, name, target } = fieldsValue;
         const param: Partial<Project> = {
           baseUrl: `/${baseUrl}`,
           desc: desc || name,
           name,
           proxy: {
-            proxyUrl: proxyUrl ? `http://${proxyUrl}` : '',
+            target: target ? `http://${target}` : '',
           },
         };
         try {
@@ -100,7 +100,7 @@ function ProjectCreate(props: any) {
             })(<Input addonBefore="/" maxLength={30} placeholder="example" />)}
           </Form.Item>
           <Form.Item label="项目代理URL">
-            {getFieldDecorator('proxyUrl', {
+            {getFieldDecorator('target', {
               rules: [
                 {
                   pattern: /^((https?:\/\/)?(([a-zA-Z0-9]+-?)+[a-zA-Z0-9]+\.)+[a-zA-Z]+)(:\d+)?(\/.*)?(\?.*)?(#.*)?$/,
@@ -111,7 +111,7 @@ function ProjectCreate(props: any) {
               <Input
                 addonBefore="http://"
                 maxLength={255}
-                placeholder="www.a.com"
+                placeholder="www.abc.com"
               />
             )}
           </Form.Item>

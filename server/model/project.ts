@@ -16,7 +16,8 @@ const ProjectSchema = new mongoose.Schema({
     type: Object,
     default: {
       target: 'http://www.xl.com',
-      cookie: ''
+      cookie: '',
+      status: 0 // 1 开， 0 关
     }
   },
   apis: [

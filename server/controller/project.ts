@@ -51,8 +51,27 @@ async function queryProject(ctx: any) {
   }
 }
 
+// 创建 mock API
+async function updateProject(ctx: any) {
+  const { projectId } = ctx.request.body;
+  if (!projectId) {
+    ctx.respond.error('参数错误，缺少 projectId!');
+  }
+  let rs: IProject;
+  try {
+    rs = await service.project.updateProject(ctx.request.body);
+    if (rs) {
+      ctx.respond.success('项目保存成功', rs);
+    }
+  } catch (error) {
+    console.log(error);
+    ctx.respond.error(`项目保存失败: ${error}`);
+  }
+}
+
 module.exports = {
   createProject,
   getProjectList,
-  queryProject
+  queryProject,
+  updateProject
 };

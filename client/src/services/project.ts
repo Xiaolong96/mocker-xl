@@ -35,3 +35,13 @@ export const queryProject = async (params: { projectId: string }) => {
   });
   return res && res.data;
 };
+
+// 编辑项目 /project/update
+export const updateProject = async (params: Partial<Project>) => {
+  const res = await request<Response<RequestResponse>>({
+    url: '/project/update',
+    method: 'POST',
+    data: params,
+  });
+  return res && res.data;
+};

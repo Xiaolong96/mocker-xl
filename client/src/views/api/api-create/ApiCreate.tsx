@@ -229,7 +229,7 @@ function ApiCreate(props: any) {
               props.history.goBack();
             }}
           >
-            关闭
+            返回
           </Button>
         </div>
       </div>

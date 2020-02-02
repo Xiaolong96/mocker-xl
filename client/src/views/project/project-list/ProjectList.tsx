@@ -90,7 +90,7 @@ function ProjectList(props: any) {
             <p className="project-url">{item.baseUrl}</p>
             <span className="project-tit">代理路径</span>
             <p className="project-proxy-url">
-              {item.proxy.proxyUrl || '您还没有设置哦～'}
+              {item.proxy.target || '您还没有设置哦～'}
             </p>
           </div>
         ))}

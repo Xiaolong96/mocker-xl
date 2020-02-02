@@ -22,10 +22,11 @@ router.get('/api/list', getApiList);
 router.post('/api/create', createApi);
 
 // project
-const { createProject, getProjectList, queryProject } = controller.project;
+const { createProject, getProjectList, queryProject, updateProject } = controller.project;
 router.post('/project/create', createProject);
 router.get('/project/list', getProjectList);
 router.get('/project/query', queryProject);
+router.post('/project/update', updateProject);
 
 // mock
 const { mock } = controller.mock;
