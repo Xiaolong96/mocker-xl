@@ -293,7 +293,9 @@ function ProjectDetail(props: any) {
               </span>
             </Descriptions.Item>
             <Descriptions.Item label="代理状态">
-              {project.proxy.status == 0 ? '关' : '开'}
+              <span className={project.proxy.status == 0 ? 'red' : 'green'}>
+                {project.proxy.status == 0 ? '关' : '开'}
+              </span>
             </Descriptions.Item>
           </Descriptions>
         </div>
