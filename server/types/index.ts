@@ -21,7 +21,11 @@ export interface IProject extends mongoose.Document {
   name: string;
   desc: string;
   baseUrl: string;
-  proxy: any;
+  proxy: {
+    target: string;
+    cookie: string;
+    status: number;
+  };
   apis: string[];
   createTime: number;
   modifiedTime: number;

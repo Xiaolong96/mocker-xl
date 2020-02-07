@@ -180,11 +180,11 @@ function ApiCreate(props: any) {
                   message: 'URL不能为空',
                 },
                 {
-                  pattern: /^[a-zA-Z]*$/,
-                  message: '格式为大小写英文字母',
+                  pattern: /^[a-zA-Z/]*$/,
+                  message: '格式为大小写英文字母、/',
                 },
               ],
-            })(<Input addonBefore="/" maxLength={30} placeholder="" />)}
+            })(<Input addonBefore="/" maxLength={60} placeholder="" />)}
           </Form.Item>
           <Form.Item label="接口返回延时">
             {getFieldDecorator('delay', {

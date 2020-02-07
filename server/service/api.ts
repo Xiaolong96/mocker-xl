@@ -34,9 +34,9 @@ function getApiByUrl(url: string) {
       .split('/')
       .slice(4)
       .join('/');
-  console.log(url.split('/')[2]);
   const reg = new RegExp(`.*${apiUrl}.*`, 'i');
   const condition = { url: reg, project: mongoose.Types.ObjectId(url.split('/')[2]) };
   return ApiModel.findOne(condition).sort({ modifiedTime: -1 });
 }
+
 export { createApi, getApiByUrl };

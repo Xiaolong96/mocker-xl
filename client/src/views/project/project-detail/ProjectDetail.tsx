@@ -15,6 +15,7 @@ import {
   Row,
   Col,
   Input,
+  Collapse,
 } from 'antd';
 import Spots from 'components/spots';
 import { getProjectList, queryProject, updateProject } from 'services/project';
@@ -24,6 +25,18 @@ import { ColumnProps } from 'antd/lib/table';
 import { Api } from 'typings/api';
 import { FormComponentProps } from 'antd/lib/form';
 import config from '../../../config/index';
+
+const { Panel } = Collapse;
+
+const customPanelStyle = {
+  background: '#f7f7f7',
+  borderRadius: 4,
+  marginBottom: 24,
+  // paddingRight: 24,
+  border: 0,
+  width: '940px',
+  overflow: 'hidden',
+};
 
 interface TableApi {
   name: string;
@@ -283,21 +296,38 @@ function ProjectDetail(props: any) {
         </div>
 
         <div className="proxy-info">
-          <Descriptions title="代理信息" column={3}>
+          <Descriptions title="代理信息" column={2}>
             <Descriptions.Item label="target">
               {project.proxy.target || '您还没有设置哦～'}
             </Descriptions.Item>
-            <Descriptions.Item label="cookie">
-              <span style={{ maxWidth: '200px' }} className="ellipsis">
-                {project.proxy.cookie || '--'}
-              </span>
-            </Descriptions.Item>
             <Descriptions.Item label="代理状态">
-              <span className={project.proxy.status == 0 ? 'red' : 'green'}>
-                {project.proxy.status == 0 ? '关' : '开'}
-              </span>
+              {project.proxy.status == 0 ? (
+                <Tag color="#f25252">关</Tag>
+              ) : (
+                <Tag color="#00cd7e">开</Tag>
+              )}
             </Descriptions.Item>
           </Descriptions>
+          <p className="mb-10 ant-descriptions-item-label">cookie:</p>
+          <Collapse
+            bordered={false}
+            // defaultActiveKey={['1']}
+            expandIcon={({ isActive }) => (
+              <Icon type="caret-right" rotate={isActive ? 90 : 0} />
+            )}
+          >
+            <Panel
+              header={
+                <p style={{ maxWidth: '100%' }} className="ellipsis">
+                  {project.proxy.cookie || '--'}
+                </p>
+              }
+              key="1"
+              style={customPanelStyle}
+            >
+              <span className="cookie">{project.proxy.cookie || '--'}</span>
+            </Panel>
+          </Collapse>
         </div>
 
         <div className="api-list">
@@ -379,7 +409,7 @@ function ProjectDetail(props: any) {
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col span={12}>
+            <Col span={24}>
               <Form.Item label="项目代理URL">
                 {getFieldDecorator('target', {
                   rules: [
@@ -398,11 +428,13 @@ function ProjectDetail(props: any) {
                 )}
               </Form.Item>
             </Col>
-            <Col span={12}>
+          </Row>
+          <Row gutter={16}>
+            <Col span={24}>
               <Form.Item label="cookie">
                 {getFieldDecorator('cookie', {
                   initialValue: project.proxy.cookie,
-                })(<Input.TextArea rows={4} placeholder="cookie" />)}
+                })(<Input.TextArea rows={5} placeholder="cookie" />)}
               </Form.Item>
             </Col>
           </Row>
