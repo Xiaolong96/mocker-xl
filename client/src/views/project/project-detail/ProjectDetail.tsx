@@ -25,6 +25,7 @@ import { ColumnProps } from 'antd/lib/table';
 import { Api } from 'typings/api';
 import { FormComponentProps } from 'antd/lib/form';
 import config from '../../../config/index';
+import ProjectList from './components/ProjectList';
 
 const { Panel } = Collapse;
 
@@ -74,13 +75,15 @@ function ProjectDetail(props: any) {
     createTime: '',
     modifiedTime: '',
   };
+  const [curId, setCurId] = useState<string>('');
   const [project, setProject] = useState<Project>(initProject);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
 
   const query = useCallback(async () => {
+    if (!curId) return;
     try {
       const param = {
-        projectId: props.match.params.id,
+        projectId: curId,
       };
       const rs = await queryProject(param);
       if (rs) {
@@ -89,7 +92,7 @@ function ProjectDetail(props: any) {
     } catch (error) {
       console.log(error);
     }
-  }, [props.match]);
+  }, [curId]);
 
   function handleScroll() {
     const head = headRef.current as HTMLDivElement;
@@ -258,203 +261,210 @@ function ProjectDetail(props: any) {
   const { getFieldDecorator } = props.form;
 
   return (
-    <div className="project-detail">
-      <div ref={headRef} className="project-detail-header">
-        <Spots />
-        <div className="header-info">
-          <h2>{project.name}</h2>
-          <p>{project.desc}</p>
-        </div>
-        <div className="proxy-switch">
-          {/* <p>代理开关</p>
-          <Switch size="small" onChange={() => {}} /> */}
-          <Button type="primary" icon="setting" onClick={showDrawer}>
-            设置
-          </Button>
-        </div>
-      </div>
-      <div className="project-detail-content">
-        <div className="baseInfo">
+    <div className="project-container">
+      <ProjectList setCurId={setCurId} {...props} />
+      <div className="project-detail">
+        <div ref={headRef} className="project-detail-header">
           <Spots />
-          <p className="tag">
-            <span>Mock 地址</span>
-            {`${config.host}:${config.port}/mock/${project.projectId}${project.baseUrl}`}
-          </p>
-          <p className="tag">
-            <span>Project ID</span>
-            {project.projectId}
-          </p>
-          {/* <p className="tag">
-            <span>代理地址</span>
-            {project.proxy.target || '您还没有设置哦～'}
-          </p> */}
-          <div className="opera">
-            <Button type="primary" icon="plus" onClick={goCreate}>
-              创建接口
+          <div className="header-info">
+            <h2>{project.name}</h2>
+            <p>{project.desc}</p>
+          </div>
+          <div className="proxy-switch">
+            {/* <p>代理开关</p>
+          <Switch size="small" onChange={() => {}} /> */}
+            <Button type="primary" icon="setting" onClick={showDrawer}>
+              设置
             </Button>
           </div>
         </div>
+        <div className="project-detail-content">
+          <div className="baseInfo">
+            <Spots />
+            <p className="tag">
+              <span>Mock 地址</span>
+              {`${config.host}:${config.port}/mock/${project.projectId}${project.baseUrl}`}
+            </p>
+            <p className="tag">
+              <span>Project ID</span>
+              {project.projectId}
+            </p>
+            {/* <p className="tag">
+            <span>代理地址</span>
+            {project.proxy.target || '您还没有设置哦～'}
+          </p> */}
+            <div className="opera">
+              <Button type="primary" icon="plus" onClick={goCreate}>
+                创建接口
+              </Button>
+            </div>
+          </div>
 
-        <div className="proxy-info">
-          <Descriptions title="代理信息" column={2}>
-            <Descriptions.Item label="target">
-              {project.proxy.target || '您还没有设置哦～'}
-            </Descriptions.Item>
-            <Descriptions.Item label="代理状态">
-              {project.proxy.status == 0 ? (
-                <Tag color="#f25252">关</Tag>
-              ) : (
-                <Tag color="#00cd7e">开</Tag>
+          <div className="proxy-info">
+            <Descriptions title="代理信息" column={2}>
+              <Descriptions.Item label="target">
+                {project.proxy.target || '您还没有设置哦～'}
+              </Descriptions.Item>
+              <Descriptions.Item label="代理状态">
+                {project.proxy.status == 0 ? (
+                  <Tag color="#f25252">关</Tag>
+                ) : (
+                    <Tag color="#00cd7e">开</Tag>
+                  )}
+              </Descriptions.Item>
+            </Descriptions>
+            <p className="mb-10 ant-descriptions-item-label">cookie:</p>
+            <Collapse
+              bordered={false}
+              // defaultActiveKey={['1']}
+              expandIcon={({ isActive }) => (
+                <Icon type="caret-right" rotate={isActive ? 90 : 0} />
               )}
-            </Descriptions.Item>
-          </Descriptions>
-          <p className="mb-10 ant-descriptions-item-label">cookie:</p>
-          <Collapse
-            bordered={false}
-            // defaultActiveKey={['1']}
-            expandIcon={({ isActive }) => (
-              <Icon type="caret-right" rotate={isActive ? 90 : 0} />
-            )}
-          >
-            <Panel
-              header={
-                <p style={{ maxWidth: '100%' }} className="ellipsis">
-                  {project.proxy.cookie || '--'}
-                </p>
-              }
-              key="1"
-              style={customPanelStyle}
             >
-              <span className="cookie">{project.proxy.cookie || '--'}</span>
-            </Panel>
-          </Collapse>
+              <Panel
+                header={
+                  <p style={{ maxWidth: '100%' }} className="ellipsis">
+                    {project.proxy.cookie || '--'}
+                  </p>
+                }
+                key="1"
+                style={customPanelStyle}
+              >
+                <span className="cookie">{project.proxy.cookie || '--'}</span>
+              </Panel>
+            </Collapse>
+          </div>
+
+          <div className="api-list">
+            <Table<TableApi>
+              size="middle"
+              columns={columns}
+              expandedRowRender={record => (
+                <p style={{ margin: 0 }}>{record.desc}</p>
+              )}
+              dataSource={data}
+            />
+          </div>
+          <div style={{ height: '40px' }} />
         </div>
 
-        <div className="api-list">
-          <Table<TableApi>
-            size="middle"
-            columns={columns}
-            expandedRowRender={record => (
-              <p style={{ margin: 0 }}>{record.desc}</p>
-            )}
-            dataSource={data}
-          />
-        </div>
-      </div>
-
-      <Drawer
-        title="项目设置"
-        width={720}
-        onClose={onDrawerClose}
-        visible={drawerVisible}
-        bodyStyle={{ paddingBottom: 80 }}
-      >
-        <Form layout="vertical" hideRequiredMark onSubmit={handleSubmit}>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item label="项目名称">
-                {getFieldDecorator('name', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '名称不能为空',
-                    },
-                    {
-                      pattern: /^[\u4e00-\u9fa5a-zA-Z0-9\-_.]{0,30}$/,
-                      message:
-                        '仅支持汉字、英文字母、数字、下划线(_)、连字符(-)、点(.)',
-                    },
-                  ],
-                  initialValue: project.name,
-                })(<Input maxLength={30} placeholder="project" />)}
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label="项目基础URL">
-                {getFieldDecorator('baseUrl', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '基础URL不能为空',
-                    },
-                    {
-                      pattern: /^[a-zA-Z]*$/,
-                      message: '格式为大小写英文字母',
-                    },
-                  ],
-                  initialValue: project.baseUrl.substr(1),
-                })(
-                  <Input addonBefore="/" maxLength={30} placeholder="example" />
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item label="项目描述">
-                {getFieldDecorator('desc', {
-                  initialValue: project.desc,
-                })(<Input.TextArea rows={4} placeholder="请输入项目描述" />)}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item label="代理状态">
-                {getFieldDecorator('status', {
-                  valuePropName: 'checked',
-                  initialValue: project.proxy.status == 1,
-                })(<Switch size="default" />)}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item label="项目代理URL">
-                {getFieldDecorator('target', {
-                  rules: [
-                    {
-                      pattern: /^((https?:\/\/)?(([a-zA-Z0-9]+-?)+[a-zA-Z0-9]+\.)+[a-zA-Z]+)(:\d+)?(\/.*)?(\?.*)?(#.*)?$/,
-                      message: '格式不正确',
-                    },
-                  ],
-                  initialValue: project.proxy.target.substr(7),
-                })(
-                  <Input
-                    addonBefore="http://"
-                    maxLength={255}
-                    placeholder="www.abc.com"
-                  />
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item label="cookie">
-                {getFieldDecorator('cookie', {
-                  initialValue: project.proxy.cookie,
-                })(<Input.TextArea rows={5} placeholder="cookie" />)}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Form.Item
-            style={{
-              position: 'absolute',
-              right: 0,
-              bottom: 0,
-              width: '100%',
-              borderTop: '1px solid #e9e9e9',
-              padding: '10px 16px',
-              background: '#fff',
-              textAlign: 'center',
-            }}
-          >
-            <Button htmlType="submit" type="primary">
-              保存
-            </Button>
-          </Form.Item>
-          {/* <div
+        <Drawer
+          title="项目设置"
+          width={720}
+          onClose={onDrawerClose}
+          visible={drawerVisible}
+          bodyStyle={{ paddingBottom: 80 }}
+        >
+          <Form layout="vertical" hideRequiredMark onSubmit={handleSubmit}>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item label="项目名称">
+                  {getFieldDecorator('name', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '名称不能为空',
+                      },
+                      {
+                        pattern: /^[\u4e00-\u9fa5a-zA-Z0-9\-_.]{0,30}$/,
+                        message:
+                          '仅支持汉字、英文字母、数字、下划线(_)、连字符(-)、点(.)',
+                      },
+                    ],
+                    initialValue: project.name,
+                  })(<Input maxLength={30} placeholder="project" />)}
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label="项目基础URL">
+                  {getFieldDecorator('baseUrl', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '基础URL不能为空',
+                      },
+                      {
+                        pattern: /^[a-zA-Z]*$/,
+                        message: '格式为大小写英文字母',
+                      },
+                    ],
+                    initialValue: project.baseUrl.substr(1),
+                  })(
+                    <Input
+                      addonBefore="/"
+                      maxLength={30}
+                      placeholder="example"
+                    />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item label="项目描述">
+                  {getFieldDecorator('desc', {
+                    initialValue: project.desc,
+                  })(<Input.TextArea rows={4} placeholder="请输入项目描述" />)}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item label="代理状态">
+                  {getFieldDecorator('status', {
+                    valuePropName: 'checked',
+                    initialValue: project.proxy.status == 1,
+                  })(<Switch size="default" />)}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item label="项目代理URL">
+                  {getFieldDecorator('target', {
+                    rules: [
+                      {
+                        pattern: /^((https?:\/\/)?(([a-zA-Z0-9]+-?)+[a-zA-Z0-9]+\.)+[a-zA-Z]+)(:\d+)?(\/.*)?(\?.*)?(#.*)?$/,
+                        message: '格式不正确',
+                      },
+                    ],
+                    initialValue: project.proxy.target.substr(7),
+                  })(
+                    <Input
+                      addonBefore="http://"
+                      maxLength={255}
+                      placeholder="www.abc.com"
+                    />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item label="cookie">
+                  {getFieldDecorator('cookie', {
+                    initialValue: project.proxy.cookie,
+                  })(<Input.TextArea rows={5} placeholder="cookie" />)}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Form.Item
+              style={{
+                position: 'absolute',
+                right: 0,
+                bottom: 0,
+                width: '100%',
+                borderTop: '1px solid #e9e9e9',
+                padding: '10px 16px',
+                background: '#fff',
+                textAlign: 'center',
+              }}
+            >
+              <Button htmlType="submit" type="primary">
+                保存
+              </Button>
+            </Form.Item>
+            {/* <div
             style={{
               position: 'absolute',
               right: 0,
@@ -475,14 +485,15 @@ function ProjectDetail(props: any) {
               </Button>
             </Form.Item>
           </div> */}
-        </Form>
-      </Drawer>
+          </Form>
+        </Drawer>
 
-      <Link to="/project/create">
-        <div className="add">
-          <Icon type="plus" />
-        </div>
-      </Link>
+        <Link to="/project/create">
+          <div className="add">
+            <Icon type="plus" />
+          </div>
+        </Link>
+      </div>
     </div>
   );
 }
