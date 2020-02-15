@@ -37,6 +37,16 @@ const ApiCreate = (props: RouteComponentProps) => {
   );
 };
 
+// 接口编辑页
+const ApiEditCom = lazy(() => import('views/api/api-edit/ApiEdit'));
+const ApiEdit = (props: RouteComponentProps) => {
+  return (
+    <Suspense fallback={null}>
+      <ApiEditCom {...props} />
+    </Suspense>
+  );
+};
+
 const routes: RouteConfig[] = [
   {
     path: '/',
@@ -61,6 +71,12 @@ const routes: RouteConfig[] = [
     exact: true,
     key: 'ApiCreate',
     component: ApiCreate,
+  },
+  {
+    path: '/api/edit/:apiId',
+    exact: true,
+    key: 'ApiEdit',
+    component: ApiEdit,
   },
 ];
 

@@ -45,3 +45,13 @@ export const updateProject = async (params: Partial<Project>) => {
   });
   return res && res.data;
 };
+
+// 删除项目
+export const deleteProject = async (params: { projectId: string }) => {
+  const res = await request<Response<RequestResponse>>({
+    url: '/project/delete',
+    method: 'DELETE',
+    data: params,
+  });
+  return res && res.data;
+};

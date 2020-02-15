@@ -64,7 +64,62 @@ async function getApiList(ctx: any) {
   // }
 }
 
+// 查询api
+async function queryApi(ctx: any) {
+  let rs: IApi;
+  const { apiId } = ctx.query;
+  try {
+    rs = await service.api.findApi(apiId);
+    if (rs) {
+      ctx.respond.success('api查询成功', rs);
+    } else {
+      ctx.respond.success('api查询结果为空', {});
+    }
+  } catch (error) {
+    console.log(error);
+    ctx.respond.error(`api查询失败: ${error}`);
+  }
+}
+
+// 更新api
+async function updateApi(ctx: any) {
+  const { _id } = ctx.request.body;
+  if (!_id) {
+    ctx.respond.error('参数错误，缺少 api id!');
+  }
+  let rs: IApi;
+  try {
+    rs = await service.api.updateApi(ctx.request.body);
+    if (rs) {
+      ctx.respond.success('api保存成功', rs);
+    }
+  } catch (error) {
+    console.log(error);
+    ctx.respond.error(`api保存失败: ${error}`);
+  }
+}
+
+// 删除api
+async function deleteApi(ctx: any) {
+  let rs: any;
+  const { apiId } = ctx.request.body;
+  console.log(ctx.request.body);
+  console.log(ctx.query);
+  try {
+    rs = await service.api.deleteApi(apiId);
+    if (rs) {
+      ctx.respond.success('删除成功', {});
+    }
+  } catch (error) {
+    console.log(error);
+    ctx.respond.error(`删除失败: ${error}`);
+  }
+}
+
 module.exports = {
   createApi,
-  getApiList
+  getApiList,
+  queryApi,
+  updateApi,
+  deleteApi
 };

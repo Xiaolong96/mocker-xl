@@ -1,7 +1,8 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable import/extensions */
-/* eslint-disable import/no-unresolved */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router';
 import {
   Icon,
   Button,
@@ -16,14 +17,16 @@ import {
   Col,
   Input,
   Collapse,
+  Popconfirm,
 } from 'antd';
 import Spots from 'components/spots';
-import { getProjectList, queryProject, updateProject } from 'services/project';
+import { queryProject, updateProject } from 'services/project';
 import { Project } from 'typings/project';
 import './index.less';
 import { ColumnProps } from 'antd/lib/table';
 import { Api } from 'typings/api';
 import { FormComponentProps } from 'antd/lib/form';
+import { deleteApi } from 'services/api';
 import config from '../../../config/index';
 import ProjectList from './components/ProjectList';
 
@@ -40,6 +43,7 @@ const customPanelStyle = {
 };
 
 interface TableApi {
+  id: string;
   name: string;
   method: string;
   url: string;
@@ -53,6 +57,7 @@ interface FormProps extends FormComponentProps {
 }
 
 function ProjectDetail(props: any) {
+  const history = useHistory();
   const headRef = useRef<HTMLDivElement>(null);
 
   const methodColor = {
@@ -93,6 +98,28 @@ function ProjectDetail(props: any) {
       console.log(error);
     }
   }, [curId]);
+
+  const delApi = async (apiId: string) => {
+    if (!apiId) return;
+    try {
+      const param = {
+        apiId,
+      };
+      const rs = await deleteApi(param);
+      if (rs) {
+        query();
+        message.success('删除成功');
+      }
+    } catch (error) {
+      console.log(error);
+      message.success(`删除失败: ${error}`);
+    }
+  };
+
+  // 取消删除
+  const cancel = (e: React.MouseEvent<HTMLElement, MouseEvent> | undefined) => {
+    console.log(e);
+  };
 
   function handleScroll() {
     const head = headRef.current as HTMLDivElement;
@@ -183,8 +210,25 @@ function ProjectDetail(props: any) {
               copyUrl(record);
             }}
           />
-          <Icon title="编辑" className="opera-btn" type="edit" />
-          <Icon title="删除" className="opera-btn" type="delete" />
+          <Icon
+            title="编辑"
+            className="opera-btn"
+            type="edit"
+            onClick={() => {
+              history.push(`/api/edit/${record.id}`);
+            }}
+          />
+          <Popconfirm
+            title="Are you sure delete this api?"
+            onConfirm={() => {
+              delApi(record.id);
+            }}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Icon title="删除" className="opera-btn" type="delete" />
+          </Popconfirm>
         </>
       ),
     },
@@ -192,6 +236,7 @@ function ProjectDetail(props: any) {
 
   const data: TableApi[] = project.apis.map((item: Api, idx: number) => {
     return {
+      id: item._id,
       name: item.name,
       method: item.options.method,
       url: item.url,
@@ -203,7 +248,7 @@ function ProjectDetail(props: any) {
 
   // 跳转接口创建页
   const goCreate = () => {
-    props.history.push(`/api/create?project=${props.match.params.id}`);
+    props.history.push(`/api/create?project=${curId}`);
   };
 
   // 抽屉
@@ -309,8 +354,8 @@ function ProjectDetail(props: any) {
                 {project.proxy.status == 0 ? (
                   <Tag color="#f25252">关</Tag>
                 ) : (
-                    <Tag color="#00cd7e">开</Tag>
-                  )}
+                  <Tag color="#00cd7e">开</Tag>
+                )}
               </Descriptions.Item>
             </Descriptions>
             <p className="mb-10 ant-descriptions-item-label">cookie:</p>
@@ -340,7 +385,20 @@ function ProjectDetail(props: any) {
               size="middle"
               columns={columns}
               expandedRowRender={record => (
-                <p style={{ margin: 0 }}>{record.desc}</p>
+                <div>
+                  <p>
+                    <b className="mr-20">接口名称: </b>
+                    {`${record.name}`}
+                  </p>
+                  <p>
+                    <b className="mr-20">url: </b>
+                    {`${record.url}`}
+                  </p>
+                  <p>
+                    <b className="mr-20">描述: </b>
+                    {`${record.desc}`}
+                  </p>
+                </div>
               )}
               dataSource={data}
             />

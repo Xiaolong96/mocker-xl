@@ -17,16 +17,26 @@ const controller = loadFileList(path.join(__dirname, '../controller'), 'controll
 
 // console.log(controller);
 // api
-const { getApiList, createApi } = controller.api;
+const { getApiList, createApi, queryApi, updateApi, deleteApi } = controller.api;
+router.get('/api/query', queryApi);
 router.get('/api/list', getApiList);
 router.post('/api/create', createApi);
+router.post('/api/update', updateApi);
+router.delete('/api/delete', deleteApi);
 
 // project
-const { createProject, getProjectList, queryProject, updateProject } = controller.project;
+const {
+  createProject,
+  getProjectList,
+  queryProject,
+  updateProject,
+  deleteProject
+} = controller.project;
 router.post('/project/create', createProject);
 router.get('/project/list', getProjectList);
 router.get('/project/query', queryProject);
 router.post('/project/update', updateProject);
+router.delete('/project/delete', deleteProject);
 
 // mock
 const { mock } = controller.mock;

@@ -51,7 +51,7 @@ async function queryProject(ctx: any) {
   }
 }
 
-// 创建 mock API
+// 更新项目
 async function updateProject(ctx: any) {
   const { projectId } = ctx.request.body;
   if (!projectId) {
@@ -69,9 +69,25 @@ async function updateProject(ctx: any) {
   }
 }
 
+// 删除项目
+async function deleteProject(ctx: any) {
+  let rs: any;
+  const { projectId } = ctx.request.body;
+  try {
+    rs = await service.project.deleteProject(projectId);
+    if (rs) {
+      ctx.respond.success('删除成功', {});
+    }
+  } catch (error) {
+    console.log(error);
+    ctx.respond.error(`删除失败: ${error}`);
+  }
+}
+
 module.exports = {
   createProject,
   getProjectList,
   queryProject,
-  updateProject
+  updateProject,
+  deleteProject
 };

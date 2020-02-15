@@ -39,4 +39,24 @@ function getApiByUrl(url: string) {
   return ApiModel.findOne(condition).sort({ modifiedTime: -1 });
 }
 
-export { createApi, getApiByUrl };
+function findApi(id: string) {
+  return ApiModel.findOne({ _id: mongoose.Types.ObjectId(id) });
+}
+
+async function updateApi(api: IApi) {
+  try {
+    const apiRs = await ApiModel.findOne({ _id: mongoose.Types.ObjectId(api._id) });
+    if (apiRs) {
+      apiRs.set({ ...apiRs, ...api });
+      return apiRs.save();
+    }
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
+
+function deleteApi(id: string) {
+  return ApiModel.deleteOne({ _id: mongoose.Types.ObjectId(id) });
+}
+
+export { createApi, getApiByUrl, findApi, updateApi, deleteApi };

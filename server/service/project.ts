@@ -36,4 +36,8 @@ async function updateProject(p: IProject) {
   }
 }
 
-export { createProject, getAllProject, findProject, updateProject };
+function deleteProject(id: string) {
+  return ProjectModel.deleteOne({ projectId: mongoose.Types.ObjectId(id) });
+}
+
+export { createProject, getAllProject, findProject, updateProject, deleteProject };

@@ -71,7 +71,6 @@ function ApiCreate(props: any) {
   const trigger = (e: editor.IStandaloneCodeEditor, id: string) => {
     console.log(e, 'meditor');
     if (!e) return;
-    console.log('onFormataaa');
     e.trigger('anyString', id, null);
   };
 
@@ -131,7 +130,7 @@ function ApiCreate(props: any) {
         <Spots />
         <div className="header-info">
           <h2>创建接口</h2>
-          <p>快来创建一个令人愉快的接口吧～</p>
+          <p>(=￣ ρ￣=) ..zzZZ</p>
         </div>
         <Form
           layout="vertical"
