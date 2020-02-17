@@ -2,6 +2,8 @@
 
 本地 mock 工具，提高开发效率
 
+![首页](https://images.cnblogs.com/cnblogs_com/xiongxiaolong/1648076/o_2002151241170E5F61EC-3CB7-4E6C-8C0A-27F91DA1A0AC.jpg)
+
 ## 功能点
 
 - Mock 数据，支持 `mockjs` 语法
