@@ -1,4 +1,4 @@
-import { request, Response } from '../axios/config';
+import { request, Response } from '../utils/request';
 import { Project } from '../typings/project';
 
 interface RequestResponse {

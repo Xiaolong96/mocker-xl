@@ -2,7 +2,7 @@
   "name": "mocker-xl-client",
   "version": "0.1.0",
   "private": true,
-  "homepage": "//mocker.xl.com",
+  "homepage": ".",
   "proxy": "http://localhost:1988",
   "dependencies": {
     "@types/echarts": "^4.4.1",

@@ -1,5 +1,5 @@
 import { Api } from 'typings/api';
-import { request, Response } from '../axios/config';
+import { request, Response } from '../utils/request';
 
 interface RequestResponse {
   code: number;
