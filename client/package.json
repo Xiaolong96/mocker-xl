@@ -5,7 +5,6 @@
   "homepage": ".",
   "proxy": "http://localhost:1988",
   "dependencies": {
-    "@types/echarts": "^4.4.1",
     "@types/jest": "24.0.15",
     "@types/lodash": "^4.14.144",
     "@types/node": "12.6.8",
@@ -23,7 +22,7 @@
     "axios": "^0.19.0",
     "camelcase": "^5.2.0",
     "css-loader": "2.1.1",
-    "echarts": "^4.5.0",
+    "immutable": "^4.0.0-rc.12",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "monaco-editor": "^0.19.3",
@@ -39,7 +38,8 @@
     "react-router-config": "^5.1.1",
     "react-router-dom": "^5.1.2",
     "react-virtualized": "^9.21.1",
-    "rsuite": "^4.0.3"
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "start": "node scripts/start.js",
@@ -175,8 +175,6 @@
     "welink-devtool": "^0.3.3",
     "welink-devtool-sdk": "^1.0.19",
     "workbox-webpack-plugin": "4.2.0",
-    "dotenv": "6.2.0",
-    "dotenv-expand": "4.2.0",
     "eslint-config-react-app": "^5.0.1",
     "eslint-loader": "2.1.2",
     "eslint-plugin-flowtype": "2.50.1",
