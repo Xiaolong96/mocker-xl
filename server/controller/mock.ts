@@ -23,15 +23,16 @@ const httpRequest = (ctx: any, options: any) => {
       endData: any,
       filesLength: number,
       totallength = 0;
-    console.log(ctx.request.body);
+    console.log('ctx.request.body', ctx.request.body);
     if (ctx.request.body) {
-      if (ctx.request.header['content-type'].indexOf('application/x-www-form-urlencoded') > -1) {
+      const contentType = ctx.request.header['content-type'] || 'application/json';
+      if (contentType.indexOf('application/x-www-form-urlencoded') > -1) {
         requestBody = querystring.stringify(ctx.request.body);
         options.headers['Content-Length'] = Buffer.byteLength(requestBody);
-      } else if (ctx.request.header['content-type'].indexOf('application/json') > -1) {
+      } else if (contentType.indexOf('application/json') > -1) {
         requestBody = JSON.stringify(ctx.request.body);
         options.headers['Content-Length'] = Buffer.byteLength(requestBody);
-      } else if (ctx.request.header['content-type'].indexOf('multipart/form-data') > -1) {
+      } else if (contentType.indexOf('multipart/form-data') > -1) {
         fileFields = ctx.request.body.fields;
         files = ctx.request.body.files;
         boundaryKey = Math.random().toString(16);
@@ -55,16 +56,19 @@ const httpRequest = (ctx: any, options: any) => {
     console.log(options);
     const req = http.request(options, (res) => {
       console.log('statusCode: ', res.statusCode);
-      console.log('headers: ', res.headers);
+      // console.log('headers: ', res.headers);
+      res.setEncoding('utf8');
       res.on('data', (chunk: any) => {
         // console.log(chunk.toString('utf-8'));
         chunks += chunk;
         totallength += chunk.length;
       });
       res.on('end', () => {
+        console.log('end', chunks);
         resolve(chunks);
       });
     });
+    console.log('requestBody', requestBody);
     ctx.request.body && req.write(requestBody);
     req.on('error', function(err) {
       console.error(`请求出错: ${err}`);
@@ -100,7 +104,17 @@ export async function mock(ctx: any) {
     const { status, target, cookie } = proj.proxy;
     // 如果代理状态为开的情况，直接走代理
     if (status == 1) {
-      const { host, path, port } = url.parse(
+      // console.log(
+      //   url.parse(
+      //     target +
+      //       '/' +
+      //       ctx.url
+      //         .split('/')
+      //         .slice(4)
+      //         .join('/')
+      //   )
+      // );
+      const { hostname, path, port } = url.parse(
         target +
           '/' +
           ctx.url
@@ -108,25 +122,25 @@ export async function mock(ctx: any) {
             .slice(4)
             .join('/')
       );
-      console.log(ctx.request.header);
       const options = {
-        host,
+        host: hostname,
         port: port || 80,
         path,
         method: ctx.method,
         headers: {
           // ...ctx.request.header,
-          'Content-Type': ctx.request.header['content-type'],
+          'Content-Type': ctx.request.header['content-type'] || 'application/json',
           cookie: cookie
         }
       };
       ctx.body = await httpRequest(ctx, options);
+      // console.log(ctx.body, 'ctx.body');
     } else {
       const api = await service.api.getApiByUrl(ctx.url);
-      console.log(api, 'api');
+      // console.log(api, 'api');
       if (!api) return;
       // 方法不匹配
-      console.log(ctx.method);
+      // console.log(ctx.method);
       if (api.options.method !== ctx.method.toLowerCase()) {
         ctx.status = 405;
         return;
