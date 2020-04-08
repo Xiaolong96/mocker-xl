@@ -136,7 +136,9 @@ export async function mock(ctx: any) {
       ctx.body = await httpRequest(ctx, options);
       // console.log(ctx.body, 'ctx.body');
     } else {
-      const api = await service.api.getApiByUrl(ctx.url);
+      console.log('>>>>>>>', ctx.url.split('?')[0]);
+      // 忽略url拼接参数
+      const api = await service.api.getApiByUrl(ctx.url.split('?')[0]);
       // console.log(api, 'api');
       if (!api) return;
       // 方法不匹配

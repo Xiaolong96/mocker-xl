@@ -93,8 +93,8 @@ function ProjectCreate(props: any) {
                   message: '基础URL不能为空',
                 },
                 {
-                  pattern: /^[a-zA-Z]*$/,
-                  message: '格式为大小写英文字母',
+                  pattern: /^[a-zA-Z_-]*$/,
+                  message: '格式为大小写英文字母、-、_',
                 },
               ],
             })(<Input addonBefore="/" maxLength={30} placeholder="example" />)}

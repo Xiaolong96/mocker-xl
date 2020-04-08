@@ -354,8 +354,8 @@ function ProjectDetail(props: any) {
                 {project.proxy.status == 0 ? (
                   <Tag color="#f25252">关</Tag>
                 ) : (
-                  <Tag color="#00cd7e">开</Tag>
-                )}
+                    <Tag color="#00cd7e">开</Tag>
+                  )}
               </Descriptions.Item>
             </Descriptions>
             <p className="mb-10 ant-descriptions-item-label">cookie:</p>
@@ -442,8 +442,8 @@ function ProjectDetail(props: any) {
                         message: '基础URL不能为空',
                       },
                       {
-                        pattern: /^[a-zA-Z]*$/,
-                        message: '格式为大小写英文字母',
+                        pattern: /^[a-zA-Z_-]*$/,
+                        message: '格式为大小写英文字母、-、_',
                       },
                     ],
                     initialValue: project.baseUrl.substr(1),
