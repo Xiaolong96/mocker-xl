@@ -8,7 +8,7 @@
 .project-list {
   position: relative;
   // height: 100%;
-  background-color: #3a3b3d;
+  // background-color: #3a3b3d;
   padding-bottom: 9999px;
   margin-bottom: -9959px;
   overflow-y: auto;
@@ -29,6 +29,9 @@
       .ellipsis();
       font-weight: 700;
       font-size: 14px;
+      &.active {
+        color: @primary;
+      }
     }
     .project-tit {
       position: relative;
@@ -88,7 +91,7 @@
       max-width: 80%;
       padding: 0 @space20;
       h2 {
-        font-size: @biggerFontSize;
+        font-size: @bigFontSize;
         font-weight: 700;
       }
       p {
@@ -112,7 +115,7 @@
       margin: @space10 0;
       font-size: 16px;
       color: @white;
-      background: rgba(255, 156, 10, 0.8);
+      background: fade(@primary, 80%);
       border-radius: 4px;
       box-shadow: 0 2px 3px #eee;
       padding: 30px 20px;
@@ -189,11 +192,11 @@
     text-align: center;
     color: @white;
     line-height: 42px;
-    font-size: @biggerFontSize;
+    font-size: @bigFontSize;
     cursor: pointer;
     transition: all 0.3s;
     z-index: 90;
     background: @primary;
-    box-shadow: 0 10px 30px rgba(255, 156, 10, 0.4);
+    box-shadow: 0 10px 30px fade(@primary, 40%);
   }
 }

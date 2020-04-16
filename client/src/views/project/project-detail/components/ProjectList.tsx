@@ -11,6 +11,7 @@ interface Props extends RouteComponentProps {
 }
 function ProjectList(props: Props) {
   const [projectList, setProjectList] = useState<Project[]>([]);
+  const [curId, setCurId] = useState<string>();
 
   const goDetail = (id: string) => {
     props.history.push(`/project/${id}`);
@@ -18,10 +19,14 @@ function ProjectList(props: Props) {
 
   const getAllProject = async () => {
     try {
+      const pid = sessionStorage.getItem('curId');
+      if (pid) {
+        setCurId(pid);
+      }
       const rs = await getProjectList();
       if (rs) {
         setProjectList(rs);
-        props.setCurId(rs[0].projectId);
+        props.setCurId(pid || rs[0].projectId);
       }
     } catch (error) {
       console.log(error);
@@ -64,9 +69,17 @@ function ProjectList(props: Props) {
           className="project-list-item"
           onClick={() => {
             props.setCurId(item.projectId);
+            try {
+              sessionStorage.setItem('curId', item.projectId);
+              setCurId(item.projectId);
+            } catch (error) {
+              console.log(error);
+            }
           }}
         >
-          <h2>{item.name}</h2>
+          <h2 className={item.projectId === curId ? 'active' : ''}>
+            {item.name}
+          </h2>
           <span className="project-tit">项目描述</span>
           <p className="project-desc">{item.desc}</p>
           {/* <span className="project-tit">项目路径</span>
@@ -75,17 +88,19 @@ function ProjectList(props: Props) {
           <p className="project-proxy-url">
             {item.proxy.target || '您还没有设置哦～'}
           </p> */}
-          <Popconfirm
-            title="Are you sure delete this project?"
-            onConfirm={() => {
-              delProj(item.projectId);
-            }}
-            onCancel={cancel}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Icon title="删除" className="delete-icon" type="delete" />
-          </Popconfirm>
+          {item.projectId === curId && (
+            <Popconfirm
+              title="Are you sure delete this project?"
+              onConfirm={() => {
+                delProj(item.projectId);
+              }}
+              onCancel={cancel}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Icon title="删除" className="delete-icon" type="delete" />
+            </Popconfirm>
+          )}
         </div>
       ))}
     </div>

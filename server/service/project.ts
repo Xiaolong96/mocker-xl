@@ -14,13 +14,13 @@ function createProject(project: any) {
 }
 
 function getAllProject() {
-  return ProjectModel.find({}, { _id: 0, __v: 0 }).sort({ modifiedTime: 1 });
+  return ProjectModel.find({}, { _id: 0, __v: 0 }).sort({ modifiedTime: -1 });
 }
 
 function findProject(id: string) {
   // console.log('findProject', mongoose.Types.ObjectId(id));
   return ProjectModel.findOne({ projectId: mongoose.Types.ObjectId(id) }, { _id: 0, __v: 0 })
-    .populate('apis')
+    .populate({ path: 'apis', options: { sort: { modifiedTime: -1 } } })
     .exec();
 }
 

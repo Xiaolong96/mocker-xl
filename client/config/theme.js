@@ -1,8 +1,8 @@
 // Ant Design 主题定制
 module.exports = {
-  'primary-color': '#f8a03c', // 全局主色
+  'primary-color': '#ffbb96', // 全局主色
   // 'primary-1': '#f8a03c',
-  'font-size-base': '14px', // 主字号
+  'font-size-base': '12px', // 主字号
   // 'text-color': '#000', // 主文本色
   // 'border-radius-base': 0, // 组件/浮层圆角
   // 'border-radius-sm': 0,
