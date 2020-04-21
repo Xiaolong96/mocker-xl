@@ -1,7 +1,12 @@
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
 import React from 'react';
-import { HashRouter as Router, Switch, Route } from 'react-router-dom';
+import {
+  HashRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 import MainLayout from 'components/main-layout';
 import NoMatch from 'views/no-match';
 import { RouteConfig } from 'react-router-config';
@@ -12,6 +17,11 @@ function App() {
     <div className="App">
       <Router>
         <MainLayout>
+          <Route
+            exact
+            path="/"
+            render={() => <Redirect to="/dashboard" push />}
+          />
           <Switch>
             {routes.map((route: RouteConfig, i: number) => (
               <Route

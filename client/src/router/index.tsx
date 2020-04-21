@@ -47,9 +47,19 @@ const ApiEdit = (props: RouteComponentProps) => {
   );
 };
 
+// 使用帮助页
+const HelpCom = lazy(() => import('views/help/index'));
+const Help = (props: RouteComponentProps) => {
+  return (
+    <Suspense fallback={null}>
+      <HelpCom />
+    </Suspense>
+  );
+};
+
 const routes: RouteConfig[] = [
   {
-    path: '/',
+    path: '/dashboard',
     exact: true,
     key: 'ProjectDetail',
     component: ProjectDetail,
@@ -77,6 +87,12 @@ const routes: RouteConfig[] = [
     exact: true,
     key: 'ApiEdit',
     component: ApiEdit,
+  },
+  {
+    path: '/helpdoc',
+    exact: true,
+    key: 'Help',
+    component: Help,
   },
 ];
 

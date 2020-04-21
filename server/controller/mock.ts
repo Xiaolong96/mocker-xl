@@ -2,6 +2,7 @@ import path from 'path';
 import http from 'http';
 import url from 'url';
 import fs from 'fs';
+import Mock from 'mockjs';
 import querystring from 'querystring';
 import { loadFileList } from '../util/loadFileList';
 import { IProject } from '../types';
@@ -140,18 +141,18 @@ export async function mock(ctx: any) {
       // 忽略url拼接参数
       const api = await service.api.getApiByUrl(ctx.url.split('?')[0]);
       // console.log(api, 'api');
-      if (!api) return;
+      if (!api) throw '找不到匹配的接口';
       // 方法不匹配
       // console.log(ctx.method);
       if (api.options.method !== ctx.method.toLowerCase()) {
         ctx.status = 405;
-        return;
+        throw '方法不匹配';
       }
       const delay = api.options.delay || 0;
       await sleep(delay);
       // TODO: 参数校验
 
-      ctx.body = api.options.response || {};
+      ctx.body = Mock.mock(api.options.response) || {};
     }
   } catch (error) {
     console.log(error);

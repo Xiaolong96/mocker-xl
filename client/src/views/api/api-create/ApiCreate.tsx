@@ -1,6 +1,6 @@
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Form, Input, Button, message, Select } from 'antd';
 import MonacoEditor, {
   EditorWillMount,
@@ -41,7 +41,9 @@ function ApiCreate(props: any) {
     selectOnLineNumbers: true,
   };
 
-  const [code, setCode] = useState('// type your mock data...');
+  const [code, setCode] = useState(
+    '// 在此处编写接口响应数据，支持 mockjs 语法...\n{"data": {}}'
+  );
 
   const editorDidMount: EditorDidMount = (e, monaco) => {
     console.log('editorDidMount', e);
@@ -122,6 +124,19 @@ function ApiCreate(props: any) {
     });
   };
 
+  useEffect(() => {
+    setTimeout(() => {
+      onFormat();
+    }, 100);
+    setTimeout(() => {
+      onFormat();
+    }, 160);
+    setTimeout(() => {
+      onFormat();
+    }, 500);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const { getFieldDecorator } = props.form;
 
   return (
@@ -179,8 +194,8 @@ function ApiCreate(props: any) {
                   message: 'URL不能为空',
                 },
                 {
-                  pattern: /^[a-zA-Z-_/]*$/,
-                  message: '格式为大小写英文字母、/、-、_',
+                  pattern: /^[a-zA-Z0-9-_/]*$/,
+                  message: '格式为大小写英文字母、数字、/、-、_',
                 },
               ],
             })(<Input addonBefore="/" maxLength={60} placeholder="" />)}

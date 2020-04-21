@@ -20,12 +20,10 @@ function ProjectList(props: Props) {
   const getAllProject = async () => {
     try {
       const pid = sessionStorage.getItem('curId');
-      if (pid) {
-        setCurId(pid);
-      }
       const rs = await getProjectList();
       if (rs) {
         setProjectList(rs);
+        setCurId(pid || rs[0].projectId);
         props.setCurId(pid || rs[0].projectId);
       }
     } catch (error) {
@@ -42,6 +40,7 @@ function ProjectList(props: Props) {
       };
       const rs = await deleteProject(param);
       if (rs) {
+        sessionStorage.setItem('curId', '');
         getAllProject();
         message.success('删除成功');
       }

@@ -1,7 +1,8 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import './index.less';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 const { Header, Content } = Layout;
 
@@ -10,6 +11,11 @@ interface Props {
 }
 
 function MainLayout(props: Props) {
+  const location = useLocation();
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  useEffect(() => {
+    setSelectedKeys([location.pathname.split('/')[1]]);
+  }, [location]);
   return (
     <Layout className="layout">
       <Header className="header">
@@ -19,12 +25,22 @@ function MainLayout(props: Props) {
         <Menu
           theme="light"
           mode="horizontal"
-          defaultSelectedKeys={['1']}
+          selectedKeys={selectedKeys}
           style={{ lineHeight: '64px' }}
         >
-          <Menu.Item key="1">我的项目</Menu.Item>
-          <Menu.Item key="2">日志</Menu.Item>
-          <Menu.Item key="3">关于</Menu.Item>
+          <Menu.Item key="dashboard">
+            <Link to="/dashboard">
+              <Icon type="home" />
+              我的项目
+            </Link>
+          </Menu.Item>
+          {/* <Menu.Item key="2">日志</Menu.Item> */}
+          <Menu.Item key="helpdoc">
+            <Link to="/helpdoc">
+              <Icon type="book" />
+              使用帮助
+            </Link>
+          </Menu.Item>
         </Menu>
       </Header>
       <Content className="content">{props.children}</Content>
