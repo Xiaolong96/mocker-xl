@@ -16,6 +16,23 @@
 
 需先安装 `mogodb` 和 `node` 环境
 
+## 使用
+
+拉取项目
+
+```js
+git clone https://github.com/Xiaolong96/mocker-xl.git
+cd mocker-xl
+```
+在 server -> config -> core.js 文件里修改 mongo 配置
+
+最后在项目根目录下运行以下命令，即可
+
+```js
+npm install
+npm run start
+```
+
 ## 技术栈与第三方库
 
 - typescript
