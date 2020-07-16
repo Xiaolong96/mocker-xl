@@ -233,8 +233,8 @@ function ApiEdit(props: any) {
                   message: 'URL不能为空',
                 },
                 {
-                  pattern: /^[a-zA-Z-_/]*$/,
-                  message: '格式为大小写英文字母、/、-、_',
+                  pattern: /^[a-zA-Z0-9-_/]*$/,
+                  message: '格式为大小写英文字母、数字、/、-、_',
                 },
               ],
               initialValue: api.url.substring(1),

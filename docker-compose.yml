@@ -1,0 +1,33 @@
+version: '3'
+services:
+  mocker-xl:
+    # 使用 Dockerfile
+    build: .
+    container_name: mocker-xl-container
+    ports:
+      - 1988:1988
+    environment:
+      - NODE_ENV=production
+      # mongo 就是 services 中定义 mongo 的名称
+      - docker_db=mongo
+    depends_on:
+      - mongo
+
+  mongo:
+    # https://hub.docker.com/_/mongo 查看配置
+    image: mongo
+    container_name: my-mongo-container
+    restart: always
+    environment:
+      # 会在 admin authentication database 中创建一个 root 角色的超管用户
+      MONGO_INITDB_ROOT_USERNAME: superuser
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      # init-mongo.js 将会执行 MONGO_INITDB_DATABASE 变量指定的数据库
+      MONGO_INITDB_DATABASE: admin
+    volumes:
+      # 初始化数据库
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo-js:ro
+      # MongoDB 的持久化数据存储文件夹，不使用数据卷，因为想保留初始化数据
+      - ./mongodb-volume:/data/db
+    ports:
+      - 27017:27017

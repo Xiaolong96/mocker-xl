@@ -14,7 +14,7 @@
 
 ## 环境要求
 
-需先安装 `mogodb` 和 `node` 环境
+需先安装 `mogodb` 和 `node` 环境或者安装 `docker`
 
 ## 使用
 
@@ -24,6 +24,21 @@
 git clone https://github.com/Xiaolong96/mocker-xl.git
 cd mocker-xl
 ```
+
+### 方法一
+
+Mac 安装 docker 客户端后，自带 docker-cpmpose
+
+直接在项目根目录下运行
+
+`docker-compose up -d` 或者 `npm run compose`
+
+编排完成后，访问 http://localhost:1988 即可
+
+### 方法二
+
+安装 `mogodb` 和 `node` 环境
+
 在 server -> config -> core.js 文件里修改 mongo 配置
 
 最后在项目根目录下运行以下命令，即可

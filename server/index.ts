@@ -15,12 +15,13 @@ const startTime = new Date().valueOf();
 // 设置允许跨域，并支持携带cookie
 app.use(async (ctx: any, next: any) => {
   // The value of the 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*' when the request's credentials mode is 'include'
-  // ctx.set('Access-Control-Allow-Origin', '*');
   ctx.set('Access-Control-Allow-Origin', ctx.header.origin);
-  ctx.set(
-    'Access-Control-Allow-Headers',
-    'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , access-control-allow-origin'
-  );
+  // ctx.set(
+  //   'Access-Control-Allow-Headers',
+  //   'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , access-control-allow-origin'
+  // );
+  // ctx.set('Access-Control-Allow-Origin', '*');
+  ctx.set('Access-Control-Allow-Headers', '*');
   ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
   ctx.set('Access-Control-Allow-Credentials', true);
   if (ctx.method == 'OPTIONS') {

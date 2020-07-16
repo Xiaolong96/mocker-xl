@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nodemon --watch 'server/**/*' -e ts,tsx --exec ./node_modules/.bin/ts-node -- ./server/index.ts",
     "build": "tsc",
+    "compose": "docker-compose up -d",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
